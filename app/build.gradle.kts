@@ -61,6 +61,28 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     
+    // Image loading and handling
+    implementation("io.coil-kt:coil-compose:2.5.0")
+    
+    // Location services
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    
+    // Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+    
+    // Image picker
+    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.9.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
+    
+    // Camera and gallery
+    implementation("androidx.camera:camera-core:1.3.1")
+    implementation("androidx.camera:camera-camera2:1.3.1")
+    implementation("androidx.camera:camera-lifecycle:1.3.1")
+    implementation("androidx.camera:camera-view:1.3.1")
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

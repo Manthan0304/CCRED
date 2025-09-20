@@ -14,6 +14,49 @@ data class YearlyCarbonData(
     val initiatives: List<String>
 )
 
+// New data models for carbon credits platform
+data class UserDashboard(
+    val totalCredits: Int,
+    val pendingCredits: Int,
+    val approvedCredits: Int,
+    val rejectedCredits: Int,
+    val recentProjects: List<CarbonProject>
+)
+
+data class CarbonProject(
+    val id: String,
+    val projectName: String,
+    val description: String,
+    val carbonSaved: Double, // in tons
+    val acresOfLand: Double,
+    val location: String,
+    val latitude: Double,
+    val longitude: Double,
+    val imageUri: String?,
+    val submissionDate: String,
+    val status: ProjectStatus,
+    val creditsAwarded: Int,
+    val reviewNotes: String?
+)
+
+enum class ProjectStatus {
+    PENDING,
+    APPROVED,
+    REJECTED,
+    UNDER_REVIEW
+}
+
+data class ProjectSubmission(
+    val projectName: String,
+    val description: String,
+    val carbonSaved: Double,
+    val acresOfLand: Double,
+    val location: String,
+    val latitude: Double,
+    val longitude: Double,
+    val imageUri: String?
+)
+
 // Dummy data for testing
 object DummyCarbonData {
     val ministriesData = listOf(
@@ -121,6 +164,76 @@ object DummyCarbonData {
                 "Zero-Waste Production"
             ),
             description = "Transforming industrial processes to be more sustainable and carbon-efficient through innovation."
+        )
+    )
+
+    // Dummy data for user dashboard
+    val userDashboard = UserDashboard(
+        totalCredits = 2450,
+        pendingCredits = 150,
+        approvedCredits = 2200,
+        rejectedCredits = 100,
+        recentProjects = listOf(
+            CarbonProject(
+                id = "1",
+                projectName = "Solar Farm Installation",
+                description = "Installed 500kW solar panels on 2 acres of land",
+                carbonSaved = 45.2,
+                acresOfLand = 2.0,
+                location = "Rural Area, State A",
+                latitude = 28.6139,
+                longitude = 77.2090,
+                imageUri = null,
+                submissionDate = "2024-01-15",
+                status = ProjectStatus.APPROVED,
+                creditsAwarded = 452,
+                reviewNotes = "Excellent project with clear documentation"
+            ),
+            CarbonProject(
+                id = "2",
+                projectName = "Forest Conservation",
+                description = "Protected 10 acres of forest land from deforestation",
+                carbonSaved = 120.5,
+                acresOfLand = 10.0,
+                location = "Forest Reserve, State B",
+                latitude = 19.0760,
+                longitude = 72.8777,
+                imageUri = null,
+                submissionDate = "2024-01-10",
+                status = ProjectStatus.APPROVED,
+                creditsAwarded = 1205,
+                reviewNotes = "Significant carbon sequestration impact"
+            ),
+            CarbonProject(
+                id = "3",
+                projectName = "Wind Energy Project",
+                description = "Small wind turbine installation for local community",
+                carbonSaved = 25.8,
+                acresOfLand = 1.5,
+                location = "Coastal Area, State C",
+                latitude = 12.9716,
+                longitude = 77.5946,
+                imageUri = null,
+                submissionDate = "2024-01-05",
+                status = ProjectStatus.PENDING,
+                creditsAwarded = 0,
+                reviewNotes = null
+            ),
+            CarbonProject(
+                id = "4",
+                projectName = "Wetland Restoration",
+                description = "Restored 5 acres of wetland ecosystem",
+                carbonSaved = 80.3,
+                acresOfLand = 5.0,
+                location = "Wetland Area, State D",
+                latitude = 22.5726,
+                longitude = 88.3639,
+                imageUri = null,
+                submissionDate = "2023-12-20",
+                status = ProjectStatus.REJECTED,
+                creditsAwarded = 0,
+                reviewNotes = "Insufficient documentation provided"
+            )
         )
     )
 }
