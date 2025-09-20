@@ -3,6 +3,7 @@ package com.example.ccred_3.utils
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -52,8 +53,8 @@ fun rememberImagePicker(
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
     ) { success ->
-        if (success) {
-            imageUri?.let { onImageSelected(it) }
+        if (success && imageUri != null) {
+            onImageSelected(imageUri!!)
         }
     }
 
@@ -63,18 +64,23 @@ fun rememberImagePicker(
         requestPermission = { permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE) },
         pickImage = { imagePickerLauncher.launch("image/*") },
         takePhoto = { 
-            val photoFile = File.createTempFile(
-                "photo_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())}",
-                ".jpg",
-                context.cacheDir
-            )
-            val photoUri = FileProvider.getUriForFile(
-                context,
-                "${context.packageName}.fileprovider",
-                photoFile
-            )
-            imageUri = photoUri.toString()
-            cameraLauncher.launch(photoUri)
+            try {
+                val photoFile = File.createTempFile(
+                    "photo_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())}",
+                    ".jpg",
+                    context.cacheDir
+                )
+                val photoUri = FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.fileprovider",
+                    photoFile
+                )
+                imageUri = photoUri.toString()
+                cameraLauncher.launch(photoUri)
+            } catch (e: Exception) {
+                // Handle error gracefully
+                e.printStackTrace()
+            }
         }
     )
 }
