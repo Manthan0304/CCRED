@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,6 +13,7 @@ import com.example.ccred_3.data.CarbonProject
 import com.example.ccred_3.data.CarbonSavingsData
 import com.example.ccred_3.ui.components.BottomNavigationBar
 import com.example.ccred_3.viewmodel.CarbonCreditsViewModel
+import com.example.ccred_3.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -19,6 +21,9 @@ fun MainScreen(
     navController: NavHostController,
     viewModel: CarbonCreditsViewModel
 ) {
+    val authViewModel: AuthViewModel = viewModel()
+    val isAuthenticated by authViewModel.isAuthenticated.collectAsState()
+    
     var showSplash by remember { mutableStateOf(true) }
     var showOnboarding by remember { mutableStateOf(false) }
 
@@ -33,6 +38,12 @@ fun MainScreen(
         OnboardingScreen(
             onGetStarted = {
                 showOnboarding = false
+            }
+        )
+    } else if (!isAuthenticated) {
+        Web3AuthScreen(
+            onAuthSuccess = {
+                // User is now authenticated, continue to main app
             }
         )
     } else {

@@ -50,7 +50,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    
+
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+
     // Navigation
     implementation("androidx.navigation:navigation-compose:${nav_version}")
     
@@ -82,6 +85,26 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
+
+    // Supabase dependencies
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:2.1.3")
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.1.3")
+    implementation("io.github.jan-tennert.supabase:realtime-kt:2.1.3")
+    
+    // HTTP client for API calls
+    implementation("io.ktor:ktor-client-android:2.3.7")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
+    
+    // Web3 wallet dependencies
+    implementation("org.web3j:core:4.9.8")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    
+    // WalletConnect for Web3 integration
+    implementation("com.github.WalletConnect:kotlin-walletconnect-lib:2.0.0")
+    
+    // JSON serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

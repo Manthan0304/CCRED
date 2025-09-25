@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Pending
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,6 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ccred_3.data.CarbonProject
 import com.example.ccred_3.data.ProjectStatus
 import com.example.ccred_3.viewmodel.CarbonCreditsViewModel
+import com.example.ccred_3.viewmodel.AuthViewModel
 import com.example.ccred_3.ui.components.StatusChip
 import kotlinx.coroutines.delay
 
@@ -41,7 +43,11 @@ fun DashboardScreen(
     onProjectClick: (CarbonProject) -> Unit,
     viewModel: CarbonCreditsViewModel = viewModel()
 ) {
+    val authViewModel: AuthViewModel = viewModel()
+    val currentUser by authViewModel.currentUser.collectAsState()
+    
     val userDashboard by viewModel.userDashboard.collectAsState()
+    val error by viewModel.error.collectAsState()
     var isVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -54,6 +60,36 @@ fun DashboardScreen(
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
     ) {
+        // Offline Status Banner
+        if (viewModel.isOfflineMode()) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFFF9800)),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = "Offline",
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Offline Mode - Using cached data",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+        }
+        
         // Animated Header
         AnimatedVisibility(
             visible = isVisible,
@@ -74,6 +110,23 @@ fun DashboardScreen(
                     modifier = Modifier.padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    // Sign out button in top right
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        IconButton(
+                            onClick = { authViewModel.signOut() },
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ExitToApp,
+                                contentDescription = "Sign Out",
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
                     Text(
                         text = "🌱",
                         style = MaterialTheme.typography.headlineLarge,
@@ -87,6 +140,24 @@ fun DashboardScreen(
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
+                    
+                    // User info section
+                    currentUser?.let { user ->
+                        Text(
+                            text = "Welcome, ${user.fullName}",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.White,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Wallet: ${user.walletAddress.take(6)}...${user.walletAddress.takeLast(4)}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.White.copy(alpha = 0.8f)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    
                     Text(
                         text = "Total Credits: ${userDashboard.totalCredits}",
                         style = MaterialTheme.typography.titleLarge,
